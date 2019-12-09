@@ -2,6 +2,7 @@ const { wire1Array, wire2Array } = require('./input.js');
 
 function buildWire(arr){
   let wireCoords = new Set();
+
   let x = 0;
   let y = 0;
 
@@ -12,28 +13,32 @@ function buildWire(arr){
     if(direction === 'R'){
       for(i=0; i<units; i++){
         x++;
-        wireCoords.add({x,y})
+        wireCoords.add(JSON.stringify({x,y}));
       }
     }
 
     if(direction === 'L'){
       for(i=0; i<units; i++){
         x--;
-        wireCoords.add({x,y})
+        wireCoords.add(JSON.stringify({x,y}));
+        // wireCoords.add({x,y})
       }
     }
 
     if(direction === 'U'){
       for(i=0; i<units; i++){
         y++;
-        wireCoords.add({x, y})
+        wireCoords.add(JSON.stringify({x,y}));
+        // wireCoords.add({x, y})
       }
     }
 
     if(direction === 'D'){
       for(i=0; i<units; i++){
         y--;
-        wireCoords.add({x, y})
+        wireCoords.add(JSON.stringify({x,y}));
+
+        // wireCoords.add({x, y})
       }
     }
   })
@@ -43,9 +48,10 @@ function buildWire(arr){
 
 function crossCheck(set1, set2){
   let intersections = [];
+
   for(let obj1 of set1){
     for(let obj2 of set2){
-      if(obj1.x === obj2.x && obj1.y === obj2.y){
+      if(obj1 === obj2){
         intersections.push(obj1);
       }
     }
@@ -55,7 +61,9 @@ function crossCheck(set1, set2){
 
 function manhattan(arr){
     let distances = [];
-    arr.forEach(coord => {
+
+    arr.forEach(input => {
+        let coord = JSON.parse(input);
         distances.push(Math.abs(coord.x) + Math.abs(coord.y));
     });
 
@@ -81,11 +89,12 @@ function fewestSteps(wire1, wire2, intersections){
     console.log(totalSteps.reduce(reducer));
 }
 
-function wireSteps(wire, coord){
+function wireSteps(wire, coords){
     let steps = 0;
-    for(let coords of wire){
+
+    for(let coord of wire){
         steps++;
-        if(coords.x === coord.x && coords.y === coord.y){
+        if(coord.x === coords.x && coord.y === coords.y){
             return steps;
         }
     }
@@ -94,5 +103,5 @@ function wireSteps(wire, coord){
 
 let wire1 = buildWire(wire1Array);
 let wire2 = buildWire(wire2Array);
-// manhattan(crossCheck(wire1, wire2));
-fewestSteps(wire1, wire2, crossCheck(wire1, wire2));
+manhattan(crossCheck(wire1, wire2));
+// fewestSteps(wire1, wire2, crossCheck(wire1, wire2));
