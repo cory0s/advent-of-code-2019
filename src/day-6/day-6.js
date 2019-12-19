@@ -1,17 +1,14 @@
 const fs = require('fs');
 let orbits = {};
-let totalOrbits = 0;
 
- const run = () => fs.readFile('input.txt', (err, data) => {
+ const run = async () => fs.readFile('input.txt', (err, data) => {
     if(err){ throw err };
   
     let intData = data.toString().replace(/\n/g, ' ').split(' ');
 
     readOrbits(intData);
-    // countOrbits('COM', 0);
-    // console.log(orbits);
-    // console.log(totalOrbits);
-    countTransfers('YOU',0);
+    // let orb1 = countTransfers('YOU',0);
+    checkIntersection(countTransfers('YOU',0), countTransfers('SAN',0));
 });
 
 const readOrbits = (arr) => {
@@ -37,35 +34,39 @@ const countOrbits = (node, level) => {
     }
 }
 
-let total = 0;
+const countTransfers = async (node, count, currentOrbits=[]) => {
+    let allOrbits = [...currentOrbits];
 
-const santaCheck = (node) => {
-    if(node.children.includes('SAN')){
-        return true;
+    if(node === 'COM'){
+        // console.log('ALL ORBITS', allOrbits);
+        return new Promise(resolve => resolve(allOrbits));
     }
-    node.children.forEach(child => {
-        santaCheck(child);
-    })
-}
 
-const countTransfers = (node, count) => {
-
-    if(orbits[node].children.includes('SAN')){
-        console.log('COUNT', count);
-        return count;
-    }
+    allOrbits.push(node);
 
     for(let orbit in orbits){
         let children = orbits[orbit].children;
-        if(children.includes(node) && children.length > 1){
-            santaCheck()
-            countTransfers(check[0], count+1);
-            total++;
-        } else if(children.includes(node)){
-            countTransfers(orbit, count+1);
+        if(children.includes(node)){
+            return await countTransfers(orbit, count+1, allOrbits);
         }
     }
-    return;
+}
+
+const checkIntersection = async (orb1, orb2) => {
+    let intersection;
+    const arr1 = Object.values(await orb1);
+    const arr2 = Object.values(await orb2);
+    console.log(arr1, arr2);
+
+    arr1.forEach(planet => {
+        if(arr2.includes(planet)){
+            intersection = planet;
+        }
+    });
+    console.log(intersection);
+    console.log(arr1.indexOf(intersection));
+    console.log(arr2.indexOf(intersection));
+
 }
 
 run();
