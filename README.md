@@ -11,4 +11,4 @@ https://adventofcode.com/
 - [X] Day 4: Secure Container
 - [ ] Day 5: Sunny with a Chance of Asteroids
 - [X] Day 6: Universal Orbit Map
-- [ ] Day 6: Amplification Circuit (in progress)
+- [ ] Day 7: Amplification Circuit (in progress)
