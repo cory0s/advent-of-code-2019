@@ -7,8 +7,7 @@ let orbits = {};
     let intData = data.toString().replace(/\n/g, ' ').split(' ');
 
     readOrbits(intData);
-    // let orb1 = countTransfers('YOU',0);
-    checkIntersection(countTransfers('YOU',0), countTransfers('SAN',0));
+    checkIntersection(buildOrbitMap('YOU'), buildOrbitMap('SAN'));
 });
 
 const readOrbits = (arr) => {
@@ -34,39 +33,39 @@ const countOrbits = (node, level) => {
     }
 }
 
-const countTransfers = async (node, count, currentOrbits=[]) => {
+const buildOrbitMap = async (node, currentOrbits=[]) => {
     let allOrbits = [...currentOrbits];
 
+    allOrbits.push(node);
+
     if(node === 'COM'){
-        // console.log('ALL ORBITS', allOrbits);
         return new Promise(resolve => resolve(allOrbits));
     }
-
-    allOrbits.push(node);
 
     for(let orbit in orbits){
         let children = orbits[orbit].children;
         if(children.includes(node)){
-            return await countTransfers(orbit, count+1, allOrbits);
+            return await buildOrbitMap(orbit, allOrbits);
         }
     }
 }
 
 const checkIntersection = async (orb1, orb2) => {
-    let intersection;
+    let arr1Intersection;
     const arr1 = Object.values(await orb1);
     const arr2 = Object.values(await orb2);
-    console.log(arr1, arr2);
 
-    arr1.forEach(planet => {
-        if(arr2.includes(planet)){
-            intersection = planet;
+    for(let i=0; i<arr1.length; i++){
+        if(arr2.includes(arr1[i])){
+            arr1Intersection = i;
+            break;
         }
-    });
-    console.log(intersection);
-    console.log(arr1.indexOf(intersection));
-    console.log(arr2.indexOf(intersection));
+    };
 
+    let arr2Intersection = arr2.indexOf(arr1[arr1Intersection]);
+
+    //Subtract 2 orbits from total to account for starting at 'YOU' and 'SAN'
+    console.log(arr1Intersection + arr2Intersection - 2);
 }
 
 run();
