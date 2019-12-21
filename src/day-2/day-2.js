@@ -6,12 +6,12 @@ function opCode(arr){
     if(arr[i]===1){
       let sum = arr[arr[i+1]] + arr[arr[i+2]];
       arr[arr[i+3]] = sum;
-    }else if(arr[i]===2){
+    } else if(arr[i]===2){
       let mult = arr[arr[i+1]] * arr[arr[i+2]];
       arr[arr[i+3]] = mult;
-    }else if(arr[i]===99){
+    } else if(arr[i]===99){
       return arr;
-    }else{
+    } else {
       return arr;
     }
   }
